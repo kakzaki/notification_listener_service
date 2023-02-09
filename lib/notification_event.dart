@@ -37,7 +37,7 @@ class ServiceNotificationEvent {
   /// ```
   /// Image.memory(notif.notificationIcon)
   /// ```
-  Uint8List? notificationIcon;
+  // Uint8List? notificationIcon;
 
   /// the content of the notification
   String? content;
@@ -50,7 +50,7 @@ class ServiceNotificationEvent {
     this.extrasPicture,
     this.packageName,
     this.title,
-    this.notificationIcon,
+    // this.notificationIcon,
     this.content,
   });
 
@@ -62,7 +62,7 @@ class ServiceNotificationEvent {
     extrasPicture = map['notificationExtrasPicture'];
     packageName = map['packageName'];
     title = map['title'];
-    notificationIcon = map['notificationIcon'];
+    // notificationIcon = map['notificationIcon'];
     content = map['content'];
   }
 
