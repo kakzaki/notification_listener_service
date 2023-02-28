@@ -3,14 +3,15 @@ package notification.listener.service;
 import static notification.listener.service.NotificationUtils.isPermissionGranted;
 
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
@@ -21,8 +22,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
-import notification.listener.service.models.Action;
-import notification.listener.service.models.ActionCache;
+
 
 
 public class NotificationListenerServicePlugin implements FlutterPlugin, ActivityAware, MethodCallHandler, PluginRegistry.ActivityResultListener, EventChannel.StreamHandler {
@@ -48,30 +48,33 @@ public class NotificationListenerServicePlugin implements FlutterPlugin, Activit
         eventChannel.setStreamHandler(this);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         pendingResult = result;
         if (call.method.equals("isPermissionGranted")) {
-            result.success(isPermissionGranted(context));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                result.success(isPermissionGranted(context));
+            }
         } else if (call.method.equals("requestPermission")) {
             Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
             mActivity.startActivityForResult(intent, REQUEST_CODE_FOR_NOTIFICATIONS);
-        } else if (call.method.equals("sendReply")) {
-            final String message = call.argument("message");
-            final int notificationId = call.argument("notificationId");
-
-            final Action action = ActionCache.cachedNotifications.get(notificationId);
-            if (action == null) {
-                result.error("Notification", "Can't find this cached notification", null);
-            }
-            try {
-                action.sendReply(context, message);
-                result.success(true);
-            } catch (PendingIntent.CanceledException e) {
-                result.success(false);
-                e.printStackTrace();
-            }
-        } else {
+//        } else if (call.method.equals("sendReply")) {
+//            final String message = call.argument("message");
+//            final int notificationId = call.argument("notificationId");
+//
+//            final Action action = ActionCache.cachedNotifications.get(notificationId);
+//            if (action == null) {
+//                result.error("Notification", "Can't find this cached notification", null);
+//            }
+//            try {
+//                action.sendReply(context, message);
+//                result.success(true);
+//            } catch (PendingIntent.CanceledException e) {
+//                result.success(false);
+//                e.printStackTrace();
+//            }
+//        } else {
             result.notImplemented();
         }
     }
@@ -126,7 +129,9 @@ public class NotificationListenerServicePlugin implements FlutterPlugin, Activit
             if (resultCode == Activity.RESULT_OK) {
                 pendingResult.success(true);
             } else if (resultCode == Activity.RESULT_CANCELED) {
-                pendingResult.success(isPermissionGranted(context));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    pendingResult.success(isPermissionGranted(context));
+                }
             } else {
                 pendingResult.success(false);
             }
