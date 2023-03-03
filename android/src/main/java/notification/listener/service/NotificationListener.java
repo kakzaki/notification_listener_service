@@ -9,7 +9,6 @@ import android.service.notification.StatusBarNotification;
 import androidx.annotation.RequiresApi;
 
 
-
 @SuppressLint("OverrideAbstract")
 @RequiresApi(api = VERSION_CODES.JELLY_BEAN_MR2)
 public class NotificationListener extends NotificationListenerService {
@@ -30,16 +29,21 @@ public class NotificationListener extends NotificationListenerService {
     private void handleNotification(StatusBarNotification notification) {
         String packageName = notification.getPackageName();
         Bundle extras = notification.getNotification().extras;
-        Intent intent = new Intent(NotificationConstants.INTENT);
-        intent.putExtra(NotificationConstants.PACKAGE_NAME, packageName);
-        intent.putExtra(NotificationConstants.ID, notification.getId());
+        String INTENT = "slayer.notification.listener.service.intent";
+        Intent intent = new Intent(INTENT);
+        String PACKAGE_NAME = "package_name";
+        intent.putExtra(PACKAGE_NAME, packageName);
+        String ID = "notification_id";
+        intent.putExtra(ID, notification.getId());
 
         if (extras != null) {
             CharSequence title = extras.getCharSequence(Notification.EXTRA_TITLE);
             CharSequence text = extras.getCharSequence(Notification.EXTRA_TEXT);
 
-            intent.putExtra(NotificationConstants.NOTIFICATION_TITLE, title == null ? null : title.toString());
-            intent.putExtra(NotificationConstants.NOTIFICATION_CONTENT, text == null ? null : text.toString());
+            String NOTIFICATION_TITLE = "title";
+            intent.putExtra(NOTIFICATION_TITLE, title == null ? null : title.toString());
+            String NOTIFICATION_CONTENT = "message";
+            intent.putExtra(NOTIFICATION_CONTENT, text == null ? null : text.toString());
         }
         sendBroadcast(intent);
     }
