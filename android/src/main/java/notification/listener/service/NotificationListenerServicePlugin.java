@@ -76,7 +76,6 @@ public class NotificationListenerServicePlugin implements FlutterPlugin, Activit
         } else if (call.method.equals("requestPermission")) {
             Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
             mActivity.startActivityForResult(intent, REQUEST_CODE_FOR_NOTIFICATIONS);
-            result.notImplemented();
         }
     }
 
