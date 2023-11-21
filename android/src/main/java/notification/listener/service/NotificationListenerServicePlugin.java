@@ -1,5 +1,6 @@
 package notification.listener.service;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -39,7 +40,7 @@ public class NotificationListenerServicePlugin implements FlutterPlugin, Activit
     private Result pendingResult;
     final int REQUEST_CODE_FOR_NOTIFICATIONS = 1199;
 
-    @Override
+    @Override  @SuppressLint("WrongConstant")
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
         context = flutterPluginBinding.getApplicationContext();
         channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), CHANNEL_TAG);
@@ -50,15 +51,18 @@ public class NotificationListenerServicePlugin implements FlutterPlugin, Activit
 
     public static boolean isPermissionGranted(Context context) {
         String packageName = context.getPackageName();
-        String flat = Settings.Secure.getString(context.getContentResolver(),
+        String flat;
+        flat = Settings.Secure.getString(context.getContentResolver(),
                 "enabled_notification_listeners");
         if (!TextUtils.isEmpty(flat)) {
             String[] names = flat.split(":");
             for (String name : names) {
                 ComponentName componentName = ComponentName.unflattenFromString(name);
-                boolean nameMatch = TextUtils.equals(packageName, componentName.getPackageName());
-                if (nameMatch) {
-                    return true;
+                if(componentName != null) {
+                    boolean nameMatch = TextUtils.equals(packageName, componentName.getPackageName());
+                    if (nameMatch) {
+                        return true;
+                    }
                 }
             }
         }
@@ -106,13 +110,18 @@ public class NotificationListenerServicePlugin implements FlutterPlugin, Activit
         this.mActivity = null;
     }
 
+    @SuppressLint({"WrongConstant", "UnspecifiedRegisterReceiverFlag"})
     @Override
     public void onListen(Object arguments, EventChannel.EventSink events) {
         IntentFilter intentFilter = new IntentFilter();
         String INTENT = "slayer.notification.listener.service.intent";
         intentFilter.addAction(INTENT);
         notificationReceiver = new NotificationReceiver(events);
-        context.registerReceiver(notificationReceiver, intentFilter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            context.registerReceiver(notificationReceiver, intentFilter, Context.RECEIVER_EXPORTED);
+        }else{
+            context.registerReceiver(notificationReceiver, intentFilter);
+        }
         Intent listenerIntent = new Intent(context, NotificationReceiver.class);
         context.startService(listenerIntent);
         Log.i("NotificationPlugin", "Started the notifications tracking service.");
