@@ -40,7 +40,6 @@ public class NotificationListenerServicePlugin implements FlutterPlugin, Activit
     private Result pendingResult;
     final int REQUEST_CODE_FOR_NOTIFICATIONS = 1199;
 
-    private FlutterJNI flutterJNI = new FlutterJNI();
 
     @Override  @SuppressLint("WrongConstant")
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
