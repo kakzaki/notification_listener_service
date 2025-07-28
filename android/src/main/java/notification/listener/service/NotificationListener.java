@@ -9,6 +9,8 @@ import android.service.notification.StatusBarNotification;
 import androidx.annotation.RequiresApi;
 
 
+
+
 @SuppressLint("OverrideAbstract")
 @RequiresApi(api = VERSION_CODES.JELLY_BEAN_MR2)
 public class NotificationListener extends NotificationListenerService {
@@ -68,10 +70,6 @@ public class NotificationListener extends NotificationListenerService {
             intent.putExtra("title", "");
             intent.putExtra("message", "");
         }
-
-        // Deteksi apakah MediaStyle
-        boolean isMedia = notification.getNotification().style instanceof Notification.MediaStyle;
-        intent.putExtra("is_media", isMedia);
 
         // Ambil tombol-tombol notifikasi (jika ada)
         Notification.Action[] actions = notification.getNotification().actions;

@@ -44,7 +44,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         String content = intent.getStringExtra("message");
         int id = intent.getIntExtra("notification_id", -1);
         int actionCount = intent.getIntExtra("action_count", 0);
-        boolean isMedia = intent.getBooleanExtra("is_media", false);
+
 
         HashMap<String, Object> data = new HashMap<>();
         data.put("id", id);
@@ -52,7 +52,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         data.put("title", title != null ? title : "");
         data.put("content", content != null ? content : "");
         data.put("actionCount", actionCount);
-        data.put("isMedia", isMedia);
+
 
         for (int i = 0; i < actionCount; i++) {
             String key = "action_" + i;
