@@ -27,28 +27,6 @@ public class NotificationListener extends NotificationListenerService {
 
     }
 
-//    @RequiresApi(api = VERSION_CODES.KITKAT)
-//    private void handleNotification(StatusBarNotification notification) {
-//        String packageName = notification.getPackageName();
-//        Bundle extras = notification.getNotification().extras;
-//        String INTENT = "slayer.notification.listener.service.intent";
-//        Intent intent = new Intent(INTENT);
-//        String PACKAGE_NAME = "package_name";
-//        intent.putExtra(PACKAGE_NAME, packageName);
-//        String ID = "notification_id";
-//        intent.putExtra(ID, notification.getId());
-//
-//        if (extras != null) {
-//            CharSequence title = extras.getCharSequence(Notification.EXTRA_TITLE);
-//            CharSequence text = extras.getCharSequence(Notification.EXTRA_TEXT);
-//
-//            String NOTIFICATION_TITLE = "title";
-//            intent.putExtra(NOTIFICATION_TITLE, title == null ? null : title.toString());
-//            String NOTIFICATION_CONTENT = "message";
-//            intent.putExtra(NOTIFICATION_CONTENT, text == null ? null : text.toString());
-//        }
-//        sendBroadcast(intent);
-//    }
 
     @RequiresApi(api = VERSION_CODES.KITKAT)
     private void handleNotification(StatusBarNotification notification) {
